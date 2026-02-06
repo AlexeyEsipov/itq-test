@@ -1,0 +1,8 @@
+**/target/
+**/.git/
+**/*.iml
+**/.idea/
+**/node_modules/
+Dockerfile
+README.md
+!target/*.jar
