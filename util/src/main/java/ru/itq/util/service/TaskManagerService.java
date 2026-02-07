@@ -7,9 +7,11 @@ import ru.itq.util.tasks.AbstractTask;
 import ru.itq.util.tasks.DocApproveTask;
 import ru.itq.util.tasks.DocSubmitTask;
 
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -65,7 +67,7 @@ public class TaskManagerService {
         task.onStop();
         ScheduledFuture<?> future = scheduledFutures.get(taskId);
         if (future != null) {
-            future.cancel(true); // Прерываем выполнение, если оно сейчас идет
+            future.cancel(true);
             scheduledFutures.remove(taskId);
         }
         log.info("Задача {} остановлена", taskId);

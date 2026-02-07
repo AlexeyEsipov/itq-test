@@ -1,5 +1,6 @@
 package ru.itq.util.tasks.executors;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -8,22 +9,19 @@ import org.springframework.stereotype.Component;
 import ru.itq.util.dto.DocBatch;
 import ru.itq.util.model.Status;
 import ru.itq.util.repository.DocRepository;
-import ru.itq.util.service.FeignService;
+import ru.itq.util.service.ReestrService;
 
 import java.util.List;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class DocApproveExecutor {
     @Value("${count.batchsize.docs:100}")
     private int batchSize;
     private final DocRepository docRepository;
-    private final FeignService feignService;
+    private final ReestrService reestrService;
 
-    public DocApproveExecutor(DocRepository docRepository, FeignService feignService) {
-        this.docRepository = docRepository;
-        this.feignService = feignService;
-    }
 
     public void execute() {
         try {
@@ -35,7 +33,7 @@ public class DocApproveExecutor {
             List<String> dtoStatusByInnerId = dtoPage.getContent();
             if (!dtoStatusByInnerId.isEmpty()) {
                 DocBatch batch = new DocBatch(dtoStatusByInnerId, "util-approve", "batch-comment");
-                feignService.batchApprove(batch);
+                reestrService.batchApprove(batch);
                 log.info("task:docApprove - TotalDocuments: {} , send:  {} ", totalElements, dtoStatusByInnerId.size());
             } else {
                 log.info("task:docApprove - TotalDocuments: {} ", totalElements);
