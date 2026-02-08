@@ -86,7 +86,13 @@ public class DocumentService {
 
     public Page<DocDtoStatus> findWithFilter(SearchValue searchValue) {
         Filter filter = searchValue.filter();
+        if (filter == null) {
+            filter = new Filter(null,null,null,null,null,null);
+        }
         PageParam pageParam = searchValue.pageParam();
+        if (pageParam == null) {
+            pageParam = new PageParam(null, null, "id", null);
+        }
         PageRequest pageable = createPageRequest(pageParam);
         Specification<DocEntity> specification = createSpecification.createSpecification(filter);
         Page<DocEntity> page = docRepository.findAll(specification, pageable);

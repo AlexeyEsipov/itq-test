@@ -1,5 +1,6 @@
 package ru.itq.reestr.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class DocController implements DocApi {
     private final DocumentService documentService;
 
     @PostMapping("/")
-    public ResponseEntity<Long> createDocument(@RequestBody DocCreateDto createDto) {
+    public ResponseEntity<Long> createDocument(@RequestBody @Valid DocCreateDto createDto) {
         Long id = documentService.createDoc(createDto);
         return ResponseEntity.status(201).body(id);
     }
@@ -35,7 +36,7 @@ public class DocController implements DocApi {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<Page<DocDtoStatus>> findWithFilter(@ModelAttribute SearchValue searchValue) {
+    public ResponseEntity<Page<DocDtoStatus>> findWithFilter(@ModelAttribute @Valid SearchValue searchValue) {
         Page<DocDtoStatus> result = documentService.findWithFilter(searchValue);
         return ResponseEntity.ok(result);
     }
