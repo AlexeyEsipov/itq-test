@@ -19,7 +19,7 @@ public class DocController implements DocApi {
     @PostMapping("/")
     public ResponseEntity<Long> createDocument(@RequestBody DocCreateDto createDto) {
         Long id = documentService.createDoc(createDto);
-        return ResponseEntity.ok(id);
+        return ResponseEntity.status(201).body(id);
     }
 
     @GetMapping("/{innerId}")
