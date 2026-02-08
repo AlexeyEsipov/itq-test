@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.itq.reestr.check.DateSequenceValid;
 import ru.itq.reestr.check.WhiteColumnList;
 import ru.itq.reestr.dto.*;
 import ru.itq.reestr.exception.DocumentNotFoundException;
@@ -93,6 +94,7 @@ public class DocumentService {
         if (pageParam == null) {
             pageParam = new PageParam(null, null, "id", null);
         }
+        DateSequenceValid.dateRangeCheck(filter);
         PageRequest pageable = createPageRequest(pageParam);
         Specification<DocEntity> specification = createSpecification.createSpecification(filter);
         Page<DocEntity> page = docRepository.findAll(specification, pageable);

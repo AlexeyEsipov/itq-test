@@ -20,8 +20,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
     }
 
+    @ExceptionHandler(DateSequenceException.class)
+    public ResponseEntity<ErrorResponse> handleDataRangeException(DateSequenceException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> validationFailedException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationFailedException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         StringJoiner joiner = new StringJoiner(" ");
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -29,5 +34,10 @@ public class GlobalExceptionHandler {
                   .add(fieldError.getDefaultMessage());
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(joiner.toString()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("Внутренняя ошибка сервера"));
     }
 }
